@@ -17,15 +17,30 @@ const allowedOrigins = (
   process.env.CORS_ALLOWED_ORIGINS ?? 'http://localhost:3000,http://localhost:5173'
 )
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/^['"]|['"]$/g, '').replace(/\/$/, ''))
   .filter(Boolean);
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
       callback(null, true);
       return;
     }
+    
+    // Support wildcard origins, e.g., https://*.vercel.app
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        const regex = new RegExp('^' + allowed.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
+        return regex.test(origin);
+      }
+      return false;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+      return;
+    }
+
     // Disallowed origin: omit the Access-Control-Allow-Origin header rather
     // than throwing. The browser blocks the request on its own; throwing
     // would surface as a noisy 500 in server logs.
