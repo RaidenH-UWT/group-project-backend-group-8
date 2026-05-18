@@ -72,8 +72,7 @@ Render env var be updated. A production rollout is a single env-var change
 Submit a bug report against this API at **POST `/v1/issues`** (no auth
 required). See `/api-docs` for the request schema.
 
-A consumer-facing Bug Tracker FE ships in Sprint 5; until then, file via
-the endpoint directly or open a GitHub issue on this repo.
+Deployed URL: https://group-project-bug-tracker-front-end-mu.vercel.app/
 
 ### 6. Known limits & quirks
 
