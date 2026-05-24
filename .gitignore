@@ -22,3 +22,7 @@ yarn-error.log
 
 # Coverage
 coverage/
+
+# Prisma generated client
+src/generated/
+.claude/settings.local.json
